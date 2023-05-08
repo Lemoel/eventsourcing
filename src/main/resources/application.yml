@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+  main:
+    banner-mode: off
+
+  jackson:
+    default-property-inclusion: non_null
+
+  datasource:
+    name: school
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/school}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    hikari:
+      pool-name: school-connection-pool
+      maximum-pool-size: ${HIKARI_MAX_POLL_SIZE:10}
+
+  flyway:
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    schemas: public
+    default-schema: public
+    baseline-on-migrate: true
+
+  mvc:
+    locale-resolver: fixed
+    log-request-details: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: ${LOG_LEVEL:DEBUG}
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: db
+  server:
+    port: 8081

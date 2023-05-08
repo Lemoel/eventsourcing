@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  postgres:
+    container_name: postgres
+    image: debezium/postgres:15-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres_local
+    environment:
+      POSTGRES_DB: school
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres: {}
+
+networks:
+  postgres_local:
+    name: postgres_local
+  eventbus_local:
+    name: eventbus_local
